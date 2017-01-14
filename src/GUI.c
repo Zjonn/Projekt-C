@@ -1,0 +1,100 @@
+/*
+ * GUI.c
+ *
+ *  Created on: 12.01.2017
+ *      Author: danie_000
+ */
+
+#include <stdbool.h>
+#include <gtk/gtk.h>
+#include "GUI.h"
+
+GtkWidget *menuBox, *gameBox;
+int isMenuVisiable = 0, isGameVisiable = 0;
+
+void build_menu();
+void build_game();
+
+void init(int argc, char *argv[]) {
+	gtk_init(&argc, &argv);
+	GtkWidget *window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+	gtk_window_set_title(GTK_WINDOW(window), "Quoridor");
+	gtk_window_set_default_size(GTK_WINDOW(window), 800, 600);
+	gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_MOUSE);
+	g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(gtk_main_quit),
+			NULL);
+
+	GtkWidget *layout = gtk_layout_new(NULL, NULL);
+	gtk_container_add(GTK_CONTAINER(window), layout);
+	gtk_widget_show(layout);
+
+	GtkWidget *image = gtk_image_new_from_file("539044.jpg");
+	gtk_layout_put(GTK_LAYOUT(layout), image, 0, 0);
+
+
+	build_menu();
+	build_game();
+
+	gtk_layout_put(GTK_LAYOUT(layout), menuBox, 50, 50);
+
+	//gtk_box_pack_start(GTK_BOX(box), gameBox, true, true, false);
+	//gtk_box_pack_start(GTK_BOX(box), menuBox, true, true, false);
+	gtk_widget_show_all(window);
+	gtk_main();
+}
+
+void menu_set_visiable(int isVisiable) {
+	if (isVisiable == 1)
+		gtk_widget_show(menuBox);
+	else
+		gtk_widget_hide(menuBox);
+}
+
+void game_set_visiable(int isVisiable) {
+	if (isVisiable == 1)
+		gtk_widget_show(gameBox);
+	else
+		gtk_widget_hide(gameBox);
+}
+
+int is_menu_visiable() {
+	return isMenuVisiable;
+}
+
+int is_game_visiable() {
+	return isGameVisiable;
+}
+
+void build_menu() {
+	menuBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
+
+	GtkWidget *grid = gtk_grid_new();
+	gtk_grid_set_row_spacing(GTK_GRID(grid), 10);
+	//gtk_grid_set_row_homogeneous(GTK_GRID(grid), FALSE);
+	gtk_grid_set_column_spacing(GTK_GRID(grid), 10);
+	//gtk_grid_set_column_homogeneous(GTK_GRID(grid), TRUE);
+
+	GtkWidget *client, *server, *title, *entry;
+	title = gtk_label_new("Quoridor");
+	client = gtk_button_new_with_label("Find Game");
+	server = gtk_button_new_with_label("Host Game");
+	entry = gtk_entry_new();
+	gtk_entry_set_text(GTK_ENTRY(entry), "Enter your nick");
+
+	gtk_grid_attach(GTK_GRID(grid), title, 1, 0, 20, 1);
+	gtk_grid_attach(GTK_GRID(grid), entry, 1, 1, 20, 1);
+	gtk_grid_attach(GTK_GRID(grid), client, 1, 2, 20, 1);
+	gtk_grid_attach(GTK_GRID(grid), server, 1, 3, 20, 1);
+
+	gtk_box_pack_start(GTK_BOX(menuBox), grid, false, true, true);
+	gtk_widget_set_halign(menuBox, GTK_ALIGN_CENTER);
+	gtk_widget_set_valign(menuBox, GTK_ALIGN_CENTER);
+
+	gtk_widget_show(menuBox);
+	isMenuVisiable = 1;
+
+}
+void build_game() {
+	gameBox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 5);
+}
+

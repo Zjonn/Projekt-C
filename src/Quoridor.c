@@ -10,8 +10,10 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "GUI.h"
 
-int main(void) {
+int main(int argc, char *argv[]) {
+	init(argc, argv);
 	puts(""); /* prints  */
 	return EXIT_SUCCESS;
 }
