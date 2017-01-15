@@ -15,7 +15,7 @@ int isMenuVisiable = 0, isGameVisiable = 0;
 void build_menu();
 void build_game();
 
-void init(int argc, char *argv[]) {
+void init(int argc, char *argv[]){
 	gtk_init(&argc, &argv);
 	GtkWidget *window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_title(GTK_WINDOW(window), "Quoridor");
@@ -24,21 +24,25 @@ void init(int argc, char *argv[]) {
 	g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(gtk_main_quit),
 			NULL);
 
-	GtkWidget *layout = gtk_layout_new(NULL, NULL);
-	gtk_container_add(GTK_CONTAINER(window), layout);
-	gtk_widget_show(layout);
-
-	GtkWidget *image = gtk_image_new_from_file("539044.jpg");
-	gtk_layout_put(GTK_LAYOUT(layout), image, 0, 0);
-
-
 	build_menu();
 	build_game();
 
-	gtk_layout_put(GTK_LAYOUT(layout), menuBox, 50, 50);
+	gtk_container_add(GTK_CONTAINER(window), menuBox);
 
-	//gtk_box_pack_start(GTK_BOX(box), gameBox, true, true, false);
-	//gtk_box_pack_start(GTK_BOX(box), menuBox, true, true, false);
+	GtkCssProvider *provider;
+	GdkDisplay *display;
+	GdkScreen *screen;
+
+	//GtkWidget *image = gtk_image_new_from_file("539044.jpg");
+	provider = gtk_css_provider_new ();
+	display = gdk_display_get_default ();
+	screen = gdk_display_get_default_screen (display);
+	gtk_style_context_add_provider_for_screen (screen, GTK_STYLE_PROVIDER (provider), GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+
+	gtk_css_provider_load_from_file(provider, g_file_new_for_path("t.css"), NULL);
+	g_object_unref (provider);
+
+
 	gtk_widget_show_all(window);
 	gtk_main();
 }
@@ -74,14 +78,12 @@ void build_menu() {
 	gtk_grid_set_column_spacing(GTK_GRID(grid), 10);
 	//gtk_grid_set_column_homogeneous(GTK_GRID(grid), TRUE);
 
-	GtkWidget *client, *server, *title, *entry;
-	title = gtk_label_new("Quoridor");
-	client = gtk_button_new_with_label("Find Game");
-	server = gtk_button_new_with_label("Host Game");
+	GtkWidget *client, *server, *entry;
+	client = gtk_button_new_with_label("Client");
+	server = gtk_button_new_with_label("Server");
 	entry = gtk_entry_new();
 	gtk_entry_set_text(GTK_ENTRY(entry), "Enter your nick");
 
-	gtk_grid_attach(GTK_GRID(grid), title, 1, 0, 20, 1);
 	gtk_grid_attach(GTK_GRID(grid), entry, 1, 1, 20, 1);
 	gtk_grid_attach(GTK_GRID(grid), client, 1, 2, 20, 1);
 	gtk_grid_attach(GTK_GRID(grid), server, 1, 3, 20, 1);
