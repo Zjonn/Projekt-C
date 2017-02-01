@@ -8,7 +8,7 @@
 #ifndef GUI_H_
 #define GUI_H_
 
-void init(int argc, char *argv[]);
+void init();
 
 void menu_hide();
 
