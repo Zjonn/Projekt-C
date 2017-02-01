@@ -18,7 +18,11 @@ GtkWidget *clientBox, *serverBox;
 void build_mainMenu();
 void build_game();
 
-void init() {
+
+
+void init(int argc, char *argv[]) {
+	gtk_init(&argc, &argv);
+
 	GtkWidget *window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	GtkWidget *menuBox = gtk_box_new(GTK_ORIENTATION_VERTICAL, 5);
 	gtk_window_set_title(GTK_WINDOW(window), "Quoridor");
@@ -33,11 +37,18 @@ void init() {
 	build_game();
 
 
+
 	gtk_box_pack_start(GTK_BOX(menuBox), mainMenuBox, false, true, true);
 	gtk_box_pack_start(GTK_BOX(menuBox), serverBox, false, true, true);
 	gtk_box_pack_start(GTK_BOX(menuBox), clientBox, false, true, true);
 	gtk_box_pack_start(GTK_BOX(menuBox), gameBox, false, false, false);
 	printf("1");
+
+	gtk_box_pack_start(GTK_BOX(menuBox), mainMenuBox, false, true, true);
+	gtk_box_pack_start(GTK_BOX(menuBox), gameBox, false, true, true);
+	gtk_box_pack_start(GTK_BOX(menuBox), serverBox, false, true, true);
+	gtk_box_pack_start(GTK_BOX(menuBox), clientBox, false, true, true);
+
 	gtk_widget_set_halign(menuBox, GTK_ALIGN_CENTER);
 	gtk_widget_set_valign(menuBox, GTK_ALIGN_CENTER);
 	gtk_container_add(GTK_CONTAINER(window), menuBox);
@@ -62,6 +73,10 @@ void init() {
 	menu_show();
 	gtk_widget_show(menuBox);
 	gtk_widget_show(window);
+
+
+	gtk_main();
+
 }
 
 void menu_hide() {
@@ -138,8 +153,13 @@ void build_mainMenu() {
 		gtk_grid_attach(GTK_GRID(grid), client, 1, 2, 20, 1);
 		gtk_grid_attach(GTK_GRID(grid), server, 1, 3, 20, 1);
 
+
 //		gtk_widget_set_halign(mainMenuBox, GTK_ALIGN_CENTER);
 //		gtk_widget_set_valign(mainMenuBox, GTK_ALIGN_CENTER);
+
+		gtk_widget_set_halign(mainMenuBox, GTK_ALIGN_CENTER);
+		gtk_widget_set_valign(mainMenuBox, GTK_ALIGN_CENTER);
+
 		gtk_entry_set_text(GTK_ENTRY(entry), "Enter your nick");
 		gtk_box_pack_start(GTK_BOX(mainMenuBox), grid, false, true, true);
 
@@ -252,4 +272,6 @@ void build_client() {
 	}
 
 }
+
+
 

@@ -19,6 +19,7 @@ Pos PLAYER;
 Pos OPPONENT;
 
 int main(int argc, char *argv[]) {
+
 	initPlayers();
 
 	gtk_init(&argc, &argv);
@@ -26,6 +27,8 @@ int main(int argc, char *argv[]) {
 	init();
 
 	gtk_main();
+
+	init(argc, argv);
 
 	return EXIT_SUCCESS;
 }
