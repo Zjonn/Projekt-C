@@ -35,13 +35,13 @@ int makeMove(int x, int y) {
 int placeWall(int x, int y) {
 	if (!isPlayerMove)
 		return 0;
-
+	return 1;
 }
 
 int isCorrectWall(int x, int y) {
-
+	return 0;
 }
 
 int isGameEnd() {
-
+	return 0;
 }
