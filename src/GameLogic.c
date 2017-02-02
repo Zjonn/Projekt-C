@@ -45,16 +45,27 @@ int isGameCanEnd(point P1, point P2) {
 	pola[P1->x][P1->y]->i = 1;
 	pola[P2->x][P2->y]->i = 1;
 
-	edge guardian = buildGraph(PLAYER);
-
-	destroyGraph(guardian);
+	edge theLastGuardian = buildGraph(PLAYER);
+	int result = checkGraph(theLastGuardian);
+	destroyGraph(theLastGuardian);
 	pola[P1->x][P1->y]->i = 0;
 	pola[P2->x][P2->y]->i = 0;
-	return 0;
+	return result;
 }
 
 int isGameEnd() {
 	if (PLAYER->y == 0 || isEnd)
+		return 1;
+	return 0;
+}
+
+int checkGraph(edge e) {
+	if (e == NULL)
+		return 0;
+	else if (e->point->y == 0)
+		return 1;
+	if (checkGraph(e->nodes[LEFT]) || checkGraph(e->nodes[RIGHT])
+			|| checkGraph(e->nodes[UP]), checkGraph(e->nodes[DOWN]))
 		return 1;
 	return 0;
 }
@@ -64,7 +75,7 @@ edge buildGraph(point p) {
 			|| pola[p->x][p->y]->i == 1)
 		return NULL;
 	edge e = malloc(sizeof(edge*));
-	e->isVisited = 0;
+	e->isVisited = 1;
 	e->point = p;
 
 	if (p->x - 2 > 0 && pola[p->x - 1][p->y]->i == 0) {

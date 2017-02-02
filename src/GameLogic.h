@@ -37,6 +37,8 @@ int isGameCanEnd(point P1, point P2);
 
 int isGameEnd();
 
+int checkGraph(edge e);
+
 edge buildGraph(point p);
 
 edge destroyGraph(edge e);
