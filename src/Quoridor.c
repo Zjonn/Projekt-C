@@ -14,9 +14,9 @@
 #include "GUI.h"
 #include "Quoridor.h"
 
-Field pola[SIZE][SIZE];
-Pos PLAYER;
-Pos OPPONENT;
+field pola[SIZE][SIZE];
+point PLAYER;
+point OPPONENT;
 
 int main(int argc, char *argv[]) {
 
@@ -34,11 +34,11 @@ int main(int argc, char *argv[]) {
 }
 
 void initPlayers() {
-	PLAYER = malloc(sizeof(Pos*));
-	PLAYER->x = SIZE;
-	PLAYER->y = SIZE;
+	PLAYER = malloc(sizeof(point*));
+	PLAYER->x = SIZE-1;
+	PLAYER->y = SIZE-1;
 
-	OPPONENT = malloc(sizeof(Pos*));
+	OPPONENT = malloc(sizeof(point*));
 	OPPONENT->x = 0;
 	OPPONENT->y = 0;
 }

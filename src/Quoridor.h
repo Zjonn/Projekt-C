@@ -12,24 +12,26 @@
 
 #define SIZE 17
 
-typedef struct field* Field;
+typedef struct field* field;
 
-typedef struct pos* Pos;
+typedef struct point* point;
 
 struct field {
 	GtkWidget *button;
 	int i;
 };
 
-struct pos{
+struct point{
 	int x;
 	int y;
 };
 
-extern Pos PLAYER;
+extern point PLAYER;
 
-extern Pos OPPONENT;
+extern point OPPONENT;
 
-extern Field pola[SIZE][SIZE];
+extern field pola[SIZE][SIZE];
+
+void initPlayers();
 
 #endif /* QUORIDOR_H_ */

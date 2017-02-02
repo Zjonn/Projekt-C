@@ -36,13 +36,10 @@ void init(int argc, char *argv[]) {
 	build_client();
 	build_game();
 
-
-
 	gtk_box_pack_start(GTK_BOX(menuBox), mainMenuBox, false, true, true);
 	gtk_box_pack_start(GTK_BOX(menuBox), serverBox, false, true, true);
 	gtk_box_pack_start(GTK_BOX(menuBox), clientBox, false, true, true);
 	gtk_box_pack_start(GTK_BOX(menuBox), gameBox, false, false, false);
-	printf("1");
 
 	gtk_box_pack_start(GTK_BOX(menuBox), mainMenuBox, false, true, true);
 	gtk_box_pack_start(GTK_BOX(menuBox), gameBox, false, true, true);
@@ -52,7 +49,6 @@ void init(int argc, char *argv[]) {
 	gtk_widget_set_halign(menuBox, GTK_ALIGN_CENTER);
 	gtk_widget_set_valign(menuBox, GTK_ALIGN_CENTER);
 	gtk_container_add(GTK_CONTAINER(window), menuBox);
-	printf("1");
 
 	GtkCssProvider *provider;
 	GdkDisplay *display;
@@ -153,7 +149,6 @@ void build_mainMenu() {
 		gtk_grid_attach(GTK_GRID(grid), client, 1, 2, 20, 1);
 		gtk_grid_attach(GTK_GRID(grid), server, 1, 3, 20, 1);
 
-
 //		gtk_widget_set_halign(mainMenuBox, GTK_ALIGN_CENTER);
 //		gtk_widget_set_valign(mainMenuBox, GTK_ALIGN_CENTER);
 
@@ -182,12 +177,12 @@ void build_game() {
 		for (int i = 0; i < SIZE; i++) {
 			for (int j = 0; j < SIZE; j++) {
 				printf("%d %d ", i, j);
-				Field p = malloc(sizeof(Field*));
+				field p = malloc(sizeof(field*));
 
 				p->button = gtk_button_new();
 				gtk_widget_set_name(p->button,"wladcaCieni");
 
-				p->i = (i + j) % 2;
+				p->i = 0;
 				pola[i][j] = p;
 				printf("%d \n", pola[i][j]->i);
 				gtk_grid_attach(GTK_GRID(gameBox), p->button, i*5, j*5, 5, 5);
@@ -272,6 +267,3 @@ void build_client() {
 	}
 
 }
-
-
-
