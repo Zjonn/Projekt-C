@@ -1,0 +1,83 @@
+GtkWindow {
+background-image: url("img/539044.jpg");
+background-repeat: no-repeat;
+background-size: cover;
+background-position: center center;
+}
+#myipLabel{
+	color: #672121;
+	border-style: outset;
+    border-width: 3px 3px 3px 3px;
+    border-color: #333;
+	background-color: white;
+}
+#mlodyBog{
+	padding: 36px 5px;
+	border-width: 1px 1px 1px 1px;
+}
+#gumdalf{
+	padding: 5px 36px;
+	border-width: 1px 1px 1px 1px;
+}
+#wladcaCieni{
+	padding: 36px 36px;
+	border-width: 1px 1px 1px 1px;
+}
+#aragorn{
+	padding: 5px 16px;
+	border-width: 1px 1px 1px 1px;
+}
+#boromir{
+	padding: 16px 5px;
+	border-width: 1px 1px 1px 1px;
+}
+
+#bilbo{
+	padding: 5px 16px;
+	border-width: 1px 1px 1px 1px;
+}
+#sauron{
+	padding: 5px 16px;
+	border-width: 1px 1px 1px 1px;
+}
+.entry{
+	border-style: outset;
+    border-width: 2px 2px 2px 2px;
+    border-color: #333;
+}
+.button {
+    color: black;
+ /*   background-color: #brown;*/
+    border-style: outset;
+    border-width: 2px 2px 2px 2px;
+    border-color: #333;
+
+    padding: 8px 140px;
+}
+
+.button:first-child {
+    border-radius: 5px 0 0 5px;
+}
+
+.button:last-child {
+    border-radius: 0 5px 5px 0;
+    border-width: 2px;
+}
+
+.button:hover {
+    padding: 8px 140px;
+	border-style: inset;
+/*	border-color: #black;*/
+    background-color: #993401;
+}
+
+.button *:hover {
+    color: brown;
+}
+
+.button:hover:active,
+.button:active {
+	border-style: inset;
+/*	border-color: #black;*/
+    background-color: #993401;
+}
