@@ -22,11 +22,11 @@ GtkWidget *clientStartBox, *serverStartBox;
 
 GtkWidget *nickEntry,*clientLabel, *ipClient, *ipLabel,*startLabel, *startLabelClient;
 
-GtkWidget *start, *clientPort,*serverPort, *bufor, *ready, *text;
+GtkWidget *start, *clientPort,*serverPort, *bufor, *ready, *text, *fileEntry;
 
 int isBuilt =0;
-
-void init(int argc, char *argv[])
+//Inicjuje gtk
+void initGTK(int argc, char *argv[])
 {
     gtk_init(&argc, &argv);
 
@@ -35,7 +35,7 @@ void init(int argc, char *argv[])
     gtk_window_set_title(GTK_WINDOW(window), "Quoridor");
     gtk_window_set_default_size(GTK_WINDOW(window), 1280, 1024);
     gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_MOUSE);
-    g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(gtk_main_quit),
+    g_signal_connect(G_OBJECT(window), "destroy", G_CALLBACK(exitGame),
                      NULL);
 
     build_mainMenu();
@@ -83,7 +83,7 @@ void init(int argc, char *argv[])
     gtk_main();
 
 }
-
+//Chowa wszystkie widgety
 void hide_all()
 {
     gtk_widget_hide(mainMenuBox);
@@ -95,7 +95,7 @@ void hide_all()
     if(clientStartBox!=NULL)
         gtk_widget_hide(clientStartBox);
 }
-
+// Tworzy menu glowne
 void build_mainMenu()
 {
     if (mainMenuBox == NULL)
@@ -148,7 +148,7 @@ void build_mainMenu()
     }
 
 }
-
+//Plansza + czat
 void build_game()
 {
     if (gameBox == NULL)
@@ -165,34 +165,57 @@ void build_game()
                 int x=0,y=0;
                 for(int i = 0; i<  FIELD_SIZE; i++)
                 {
-                    GtkWidget *button = gtk_button_new(),*button1 = gtk_button_new();
+                    GtkWidget *field_button = gtk_button_new(),*button1 = gtk_button_new();
+                    point p = malloc(sizeof(point*));
+                    fields field = malloc(sizeof(fields*));
+                    pola[j][i] = field;
+                    pola[j][i]->wallButton = NULL;
+                    pola[j][i]->i=0;
+                    p->x = i;
+                    p->y = j;
                     if(i%2==0)
                     {
-                        gtk_widget_set_name(button,"wladcaCieni");
-                        gtk_fixed_put(GTK_FIXED(horBox),button,x*r+y*17+20,a*r+b*20);
+                        if(j==16&&i==8)
+                        {
+                            gtk_widget_set_name(field_button,"player");
+                        }
+                        else if(j==0&&i==8)
+                        {
+                            gtk_widget_set_name(field_button,"enemy");
+                        }
+                        else
+                            gtk_widget_set_name(field_button,"wladcaCieni");
+                        gtk_fixed_put(GTK_FIXED(horBox),field_button,x*r+y*17+20,a*r+b*20);
+                        g_signal_connect(G_OBJECT(field_button), "clicked",G_CALLBACK(tryMakeMove), p);
                     }
                     else
                     {
                         if(j == 1 || j==15|| j==0 || j == 16)
                         {
-                            gtk_widget_set_name(button,"mlodyBog");
-                            gtk_fixed_put(GTK_FIXED(horBox),button,x*r+y*17+20,a*r+b*20);
+                            gtk_widget_set_name(field_button,"mlodyBog");
 
+                            gtk_fixed_put(GTK_FIXED(horBox),field_button,x*r+y*17+20,a*r+b*20);
 
+                            g_signal_connect(G_OBJECT(field_button), "clicked",G_CALLBACK(tryPlaceWall), p);
                         }
                         else
                         {
-                            gtk_widget_set_name(button,"boromir");
+                            gtk_widget_set_name(field_button,"boromir");
                             gtk_widget_set_name(button1,"boromir");
 
+                            pola[j][i]->wallButton = button1;
 
-                            gtk_fixed_put(GTK_FIXED(horBox),button,x*r+y*17+20,a*r+b*20);
+                            gtk_fixed_put(GTK_FIXED(horBox),field_button,x*r+y*17+20,a*r+b*20);
                             gtk_fixed_put(GTK_FIXED(horBox),button1,x*r+y*17+20,a*r+b*20+r/2);
+
+                            g_signal_connect(G_OBJECT(field_button), "clicked",G_CALLBACK(tryPlaceWall), p);
+                            g_signal_connect(G_OBJECT(button1), "clicked",G_CALLBACK(tryPlaceWall), p);
 
                         }
                     }
+                    pola[j][i]->button = field_button;
                     if(i%2==0)x++;
-                        else y++;
+                    else y++;
                 }
 
             }
@@ -200,28 +223,43 @@ void build_game()
             {
                 for(int i = 0; i<  9; i++)
                 {
-                    GtkWidget *button = gtk_button_new(),*button1 = gtk_button_new();
+                    point p = malloc(sizeof(point*));
+                    fields field = malloc(sizeof(fields*));
+                    pola[j][2*i] = field;
+                    pola[j][2*i]->wallButton = NULL;
+                    pola[j][2*i]->i=0;
+                    p->x = 2*i;
+                    p->y = j;
+                    GtkWidget *field_button = gtk_button_new(),*button1 = gtk_button_new();
                     if(i == 0 || i ==8)
                     {
-                        gtk_widget_set_name(button,"gumdalf");
+                        gtk_widget_set_name(field_button,"gumdalf");
                         if(i==0)
-                            gtk_fixed_put(GTK_FIXED(horBox),button,i*r+20,a*r+b*20);
+                        {
+                            gtk_fixed_put(GTK_FIXED(horBox),field_button,i*r+20,a*r+b*20);
+                            pola[j][2*i]->button = field_button;
+                        }
 
                         else
-                            gtk_fixed_put(GTK_FIXED(horBox),button,i*r + 17*i+20,a*r+b*20);
-
-
+                        {
+                            gtk_fixed_put(GTK_FIXED(horBox),field_button,i*r + 17*i+20,a*r+b*20);
+                            pola[j][2*i]->button = field_button;
+                        }
+                        g_signal_connect(G_OBJECT(field_button), "clicked",G_CALLBACK(tryPlaceWall), p);
                     }
                     else
                     {
-                        gtk_widget_set_name(button,"aragorn");
+                        gtk_widget_set_name(field_button,"aragorn");
                         gtk_widget_set_name(button1,"aragorn");
 
-                        //  gtk_widget_set_size_request(button,20 - (i%2)*10, 20);
-
-                        gtk_fixed_put(GTK_FIXED(horBox),button,i*r + 17*i+20,a*r+b*20);
+                        gtk_fixed_put(GTK_FIXED(horBox),field_button,i*r + 17*i+20,a*r+b*20);
                         gtk_fixed_put(GTK_FIXED(horBox),button1,i*r+ 17*i +20+r/2,a*r+b*20);
 
+                        pola[j][2*i]->button = field_button;
+                        pola[j][2*i]->wallButton = button1;
+
+                        g_signal_connect(G_OBJECT(field_button), "clicked",G_CALLBACK(tryPlaceWall), p);
+                        g_signal_connect(G_OBJECT(button1), "clicked",G_CALLBACK(tryPlaceWall), p);
                     }
                 }
             }
@@ -230,13 +268,8 @@ void build_game()
         }
         gtk_box_pack_start(GTK_BOX(verBox),horBox,false,false,false);
 
-
-
-
         GtkWidget *grid = gtk_grid_new();
         gtk_grid_set_row_spacing(GTK_GRID(grid), 1);
-        //gtk_grid_set_row_homogeneous(GTK_GRID(grid), TRUE);
-        // gtk_grid_set_column_homogeneous(GTK_GRID(grid), TRUE);
 
         bufor = (GtkWidget *)gtk_text_buffer_new (NULL);
         GtkWidget *text_view = gtk_text_view_new_with_buffer (GTK_TEXT_BUFFER(bufor));
@@ -262,7 +295,12 @@ void build_game()
 
         GtkWidget *button=gtk_button_new_with_label("Exit");
         g_signal_connect(G_OBJECT(button), "clicked",G_CALLBACK(exitGame), NULL);
-        gtk_grid_attach(GTK_GRID(grid), button, 1, 4, 1, 1);
+        gtk_grid_attach(GTK_GRID(grid), button, 1, 5, 1, 1);
+
+        GtkWidget *save=gtk_button_new_with_label("Save");
+        g_signal_connect(G_OBJECT(save), "clicked",G_CALLBACK(saveGame), NULL);
+        gtk_grid_attach(GTK_GRID(grid), save, 1, 4, 1, 1);
+
         gtk_box_pack_start(GTK_BOX(gameBox),verBox,false,false,false);
         gtk_box_pack_start(GTK_BOX(gameBox),grid,true,true,true);
         gtk_widget_hide(gameBox);
@@ -275,7 +313,7 @@ void build_game()
         puts("Game");
     }
 }
-
+//Glowne menu serwera
 void build_server()
 {
     if (serverBox == NULL)
@@ -323,7 +361,7 @@ void build_server()
         puts("Server");
     }
 }
-
+//Glowne menu clienta
 void build_client()
 {
     if (clientBox == NULL)
@@ -370,7 +408,7 @@ void build_client()
     }
 
 }
-
+//Tworzy menu oczekiwania dla clienta
 void build_clientStartBox()
 {
     if(isBuilt==1)
@@ -416,37 +454,37 @@ void build_clientStartBox()
     {
         hide_all();
         gtk_widget_show_all(clientStartBox);
-        puts("serverStartBox");
+        puts("clientStartBox");
     }
 
 }
-
+//Zmienia tresc napisu
 void start_label()
 {
     gtk_label_set_text(GTK_LABEL(startLabel),"Connection successful.\n Wait for your enemy will be ready!");
     g_timeout_add(100,canStartGame,NULL);
 }
-
+//Zmienia tresc napisu
 void update_start_label()
 {
     gtk_label_set_text(GTK_LABEL(startLabel),"Your opponent is ready.\n Let`s start the GAME!");
 }
-
+//Zmienia tresc napisu
 void startClient_label()
 {
     gtk_label_set_text(GTK_LABEL(startLabelClient),"Please wait until the game\n starts!");
 }
-
+//Zmienia ustawnia buttona
 void start_button()
 {
     gtk_widget_set_sensitive(start,TRUE);
 }
-
+//Zmienia ustawnia buttona
 void client_button()
 {
     gtk_widget_set_sensitive(ready,FALSE);
 }
-
+//Tworzy menu serwera podczas oczekiwania
 void build_serverStartBox()
 {
     if(isBuilt==1)
@@ -474,6 +512,15 @@ void build_serverStartBox()
         GtkWidget *back=gtk_button_new_with_label("Back");
         start=gtk_button_new_with_label("Start Game");
 
+
+        GtkWidget *fileLabel = gtk_label_new("Type filename to load.");
+        gtk_grid_attach (GTK_GRID (grid), fileLabel, 1, 4, 1, 1);
+        gtk_widget_set_name(fileLabel, "myipLabel");
+
+        fileEntry = gtk_entry_new();
+        gtk_grid_attach (GTK_GRID (grid), fileEntry, 1, 5, 1, 1);
+        gtk_entry_set_text(GTK_ENTRY(fileEntry),"F");
+
         gtk_widget_set_name(startLabel,"myipLabel");
         gtk_label_set_justify(GTK_LABEL(startLabel),GTK_JUSTIFY_CENTER);
 
@@ -483,7 +530,7 @@ void build_serverStartBox()
 
         gtk_box_pack_start(GTK_BOX(serverStartBox), grid, false, true, false);
 
-        g_signal_connect(G_OBJECT(start), "clicked", G_CALLBACK(StartGameServer),
+        g_signal_connect(G_OBJECT(start), "clicked", G_CALLBACK(startGameServer),
                          NULL);
         g_signal_connect(G_OBJECT(back), "clicked", G_CALLBACK(build_mainMenu),
                          NULL);
@@ -499,17 +546,19 @@ void build_serverStartBox()
     }
 
 }
-
+//Zwraca nick gracza
 void getNick(char nick[])
 {
     strcpy(nick,gtk_entry_get_text(GTK_ENTRY(nickEntry)));
 }
-
-void updateBuforOut(char wejscie[]){
-        gtk_text_buffer_insert_at_cursor (GTK_TEXT_BUFFER(bufor),wejscie,-1);
+//Bufor wiadomosci wychodzacych
+void updateBuforOut(char wejscie[])
+{
+    gtk_text_buffer_insert_at_cursor (GTK_TEXT_BUFFER(bufor),wejscie,-1);
     gtk_entry_set_text(GTK_ENTRY(text), "");
 }
-
-void updateBuforIn(char wejscie[]){
-        gtk_text_buffer_insert_at_cursor (GTK_TEXT_BUFFER(bufor),wejscie,-1);
+//Bufor wiadomosci przychodzacych
+void updateBuforIn(char wejscie[])
+{
+    gtk_text_buffer_insert_at_cursor (GTK_TEXT_BUFFER(bufor),wejscie,-1);
 }

@@ -12,13 +12,12 @@
 
 #define FIELD_SIZE 17
 
-typedef struct field* field;
+typedef struct fields *fields;
 
-typedef struct point* point;
+typedef struct point *point;
 
-struct field
+struct fields
 {
-
     GtkWidget *button, *wallButton;
     int i;
 };
@@ -33,7 +32,7 @@ extern point PLAYER;
 
 extern point OPPONENT;
 
-extern field pola[FIELD_SIZE][FIELD_SIZE];
+extern fields pola[FIELD_SIZE][FIELD_SIZE];
 
 extern int isClient;
 
@@ -43,23 +42,35 @@ void imReady();
 
 void initPlayers();
 
+void saveGame();
+
+void loadGame();
+
 void exitGame();
+
+void updateMap(point p);
+
+void updateWalls(point p,point p2);
+
+void tryPlaceWall(GtkWidget *button, point p);
+
+void tryMakeMove(GtkWidget *button, point p);
+
+void startGameClient();
+
+void startGameServer();
+
+void opponentDisconnect();
+
+void prepareToSendMessenge(GtkWidget *w, GtkWidget *text);
 
 int waitForStart();
 
 int canStartGame();
 
-void StartGameClient();
-
-void StartGameServer();
-
-void opponentDisconnect();
+int analyzeMessenge();
 
 int isOpponentConnected();
-
-void prepareToSendMessenge(GtkWidget *w, GtkWidget *text);
-
-int analyzeMessenge();
 
 #endif /* QUORIDOR_H_ */
 

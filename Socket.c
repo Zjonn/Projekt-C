@@ -17,7 +17,7 @@ SOCKET s, newSocket;
 struct timeval timeout;
 
 struct sockaddr_in server, client;
-
+//Inicjuje soket
 int initSocket()
 {
     puts("Initialising Winsock...");
@@ -39,7 +39,7 @@ int initSocket()
 
     return 0;
 }
-
+//inicjuje server
 int initServer(int port)
 {
     //Prepare the sockaddr_in structure
@@ -61,21 +61,7 @@ int initServer(int port)
     puts("Waiting for incoming connections...");
     return 0;
 }
-
-void endConnection()
-{
-    puts("Closing connection....");
-    closesocket(s);
-    WSACleanup();
-    puts("Closed.");
-}
-
-void resetSocket()
-{
-    endConnection();
-    initSocket();
-}
-
+//Inicjujê socket jako clienta
 int initClient(char ip[], int port)
 {
     server.sin_addr.s_addr = inet_addr(ip);
@@ -91,47 +77,54 @@ int initClient(char ip[], int port)
     puts("Connected");
     return 0;
 }
-
-int sendGameData( int isClient)
+//Zamyka po³aczenie
+void endConnection()
 {
-    char dataSend[FIELD_SIZE*FIELD_SIZE+1];
-    dataSend[0]=5;
-
-    for(int i = 0; i<FIELD_SIZE; i++)
-    {
-        for(int j = 0; j<FIELD_SIZE; j++)
-        {
-            dataSend[i*FIELD_SIZE + j + 1]=pola[i][j]->i;
-        }
-    }
-
-    switch(isClient)
-    {
-    case 0:
-        if( send(newSocket, dataSend, strlen(dataSend), 0) < 0)
-        {
-            puts("Send failed");
-            return 1;
-        }
-        break;
-    case 1:
-        if( send(s, dataSend, strlen(dataSend), 0) < 0)
-        {
-            puts("Send failed");
-            return 1;
-        }
-        break;
-    }
-    puts("Data Send");
-    return 0;
+    puts("Closing connection....");
+    closesocket(s);
+    WSACleanup();
+    puts("Closed.");
+}
+//Resetuje socket
+void resetSocket()
+{
+    endConnection();
+    initSocket();
 }
 
+//Wysy³a dane ktorych nie widzi u¿ytkownik
+int sendGameData(char messenge[], int isClient)
+{
+    char sys[300];
+    memset(sys,0,300);
+    sys[0]= 7;
+    strcat(sys, messenge);
+    switch(isClient)
+    {
+    case 1:
+        if( send(s, sys, strlen(sys)+1, 0) < 0)
+        {
+            puts("Send failed");
+            return 1;
+        }
+        break;
+    case 0:
+        if( send(newSocket, sys, strlen(sys)+1, 0) < 0)
+        {
+            puts("Send failed");
+            return 1;
+        }
+        break;
+    }
+    puts("GData Send");
+    return 0;
+}
+//Odbiera dane
 int reciveData(char messenge[], int isClient)
 {
-        fd_set readSet;
+    fd_set readSet;
     int recv_size;
     FD_ZERO(&readSet);
-
 
     timeout.tv_sec = 0;
     timeout.tv_usec = 0;
@@ -144,7 +137,7 @@ int reciveData(char messenge[], int isClient)
         if((recv_size = recv(newSocket, messenge, MAX_MES_LN, 0)) == SOCKET_ERROR)
         {
             puts("recv failed");
-            return 1;
+            return 2;
         }
         break;
     case 1:
@@ -153,7 +146,7 @@ int reciveData(char messenge[], int isClient)
         if((recv_size = recv(s, messenge, MAX_MES_LN, 0)) == SOCKET_ERROR)
         {
             puts("recv failed");
-            return 1;
+            return 2;
         }
         break;
     }
@@ -161,20 +154,20 @@ int reciveData(char messenge[], int isClient)
     puts("Reply received");
     return 0;
 }
-
-int sendMessage(char message[], int isClient)
+//Wysy³a wiadomosci na czacie
+int sendMessage(char messenge[], int isClient)
 {
     switch(isClient)
     {
     case 1:
-        if( send(s, message, strlen(message), 0) < 0)
+        if( send(s, messenge, strlen(messenge)+1, 0) < 0)
         {
             puts("Send failed");
             return 1;
         }
         break;
     case 0:
-        if( send(newSocket, message, strlen(message), 0) < 0)
+        if( send(newSocket, messenge, strlen(messenge)+1, 0) < 0)
         {
             puts("Send failed");
             return 1;
@@ -184,7 +177,7 @@ int sendMessage(char message[], int isClient)
     puts("Data Send");
     return 0;
 }
-
+//Zwraca ip komputera na ktorym jestesmy
 int myIP(char ip[])
 {
     char ac[80];
@@ -209,7 +202,7 @@ int myIP(char ip[])
     }
     return 0;
 }
-
+//Czeka na polaczenie
 int waitForConnection()
 {
     int c;

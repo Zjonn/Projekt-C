@@ -19,9 +19,9 @@
 int initSocket();
 int initServer(int port);
 int initClient(char ip[], int port);
-int sendGameData( int isClient);
+int sendGameData(char messenge[], int isClient);
 int reciveData(char messenge[], int isClient);
-int sendMessage(char messange[], int isClient);
+int sendMessage(char messenge[], int isClient);
 int myIP(char ip[]);
 int waitForConnection();
 

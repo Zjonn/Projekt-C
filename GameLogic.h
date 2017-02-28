@@ -11,7 +11,7 @@
 #include <stdlib.h>
 #include "Quoridor.h"
 
-typedef struct edge* edge;
+typedef struct edge *edge;
 
 enum direction
 {
@@ -31,7 +31,9 @@ extern int isPlayerMove;
 
 extern int isEnd;
 
-int makeMove(int x, int y);
+extern int playerWalls, opponentWalls;
+
+int isCorrectMove(point p);
 
 int isCorrectWall(point P1, point P2);
 
@@ -39,10 +41,8 @@ int isGameCanEnd(point P1, point P2);
 
 int isGameEnd();
 
-int checkGraph(edge e);
+int isReachable(point p,int finish);
 
-edge buildGraph(point p);
-
-edge destroyGraph(edge e);
+void clearPlayer();
 
 #endif /* GAMELOGIC_H_ */

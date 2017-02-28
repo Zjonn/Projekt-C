@@ -8,9 +8,9 @@
 #ifndef FILEMENAGER_H_
 #define FILEMENAGER_H_
 
-int saveFile(char gameName[]);
+int saveMap(char gameName[]);
 
-int loadFile(char gameName[]);
+int loadMap(char gameName[]);
 
 
 #endif /* FILEMENAGER_H_ */

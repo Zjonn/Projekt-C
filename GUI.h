@@ -8,7 +8,9 @@
 #ifndef GUI_H_
 #define GUI_H_
 
-void init();
+extern GtkWidget *fileEntry;
+
+void initGTK();
 
 void hide_all();
 
